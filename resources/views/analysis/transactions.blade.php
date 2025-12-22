@@ -147,8 +147,7 @@
                         @endforelse
                         </tbody>
                     </table>
-
-                    @if($searchData == null && !$searchData != [])
+                    @if(is_array($transections) == false)
                         <div class="px-4 py-3 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
                             {{ $transections->links() }}
                         </div>
