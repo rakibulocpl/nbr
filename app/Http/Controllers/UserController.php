@@ -54,7 +54,6 @@ class UserController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users,email',
             'phone' => 'required',
-            'address' => 'required',
             'password' => 'required',
             'roles' => 'required',
         ]);
@@ -67,7 +66,6 @@ class UserController extends Controller
             'phone' => $request->phone,
             'desk_id' => $request->desk_id,
             'department_id' => $request->department_id,
-            'address' => $request->address,
             'password' => $request->password ? bcrypt($request->password) : null, // keep old password if not updated
         ]);
         $user->syncRoles($request->roles);
@@ -81,7 +79,6 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $user->id,
             'phone' => 'required|string|max:20',
-            'address' => 'required|string|max:500',
             'roles' => 'required|array',
             'roles.*' => 'exists:roles,name',
             'password' => 'nullable|string|min:6',
@@ -101,7 +98,6 @@ class UserController extends Controller
             'father_name' => $request->father_name,
             'mother_name' => $request->mother_name,
             'nid_no' => $request->nid_no,
-            'address' => $request->address,
             'nid_file' => $nidPath,
             'password' => $request->password ? bcrypt($request->password) : $user->password, // keep old password if not updated
         ]);

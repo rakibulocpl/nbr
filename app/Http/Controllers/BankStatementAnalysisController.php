@@ -168,20 +168,31 @@ class BankStatementAnalysisController extends Controller
 //                ->paginate(10);
             $statementFile = BankStatementFile::with('analysis')->find($fileId);
             $searchData = $authService->getSearchDAta($statementFile,$tag);
+            $totalDebit  = collect($searchData)->sum('debit');
+            $totalCredit = collect($searchData)->sum('credit');
 
         }else{
             $transections = Transaction::where('file_id', '=', $fileId)->orderBy('date', 'desc')->paginate(10);
+            $totals = Transaction::where('file_id', $fileId)
+                ->selectRaw('
+                    SUM(debit) as total_debit,
+                    SUM(credit) as total_credit
+                ')
+                ->first();
+
+            $totalDebit  = $totals->total_debit;
+            $totalCredit = $totals->total_credit;
         }
 
         $statementFile = BankStatementFile::with('analysis')->findOrFail($fileId);
-        return view('analysis.transactions', compact('transections','statementFile','searchData'));
+        return view('analysis.transactions', compact('transections','statementFile','searchData','totalDebit','totalCredit'));
     }
 
     public function allTagsByFileId($fileId)
     {
         $statementFile = BankStatementFile::with('analysis')->findOrFail($fileId);
 
-        $tags = StatementTag::where('file_id', '=', $fileId)->get();
+        $tags = StatementTag::where('file_id', '=', $fileId)->orderBy('count','desc')->get();
         return view('analysis.tags', compact('tags','statementFile'));
 
     }

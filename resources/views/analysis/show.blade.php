@@ -55,70 +55,6 @@
                 {{-- Content --}}
                 <div class="p-6 space-y-8">
 
-                    {{-- Applicant Info --}}
-                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-5 bg-gray-50 dark:bg-gray-800">
-                        <h3 class="text-md font-semibold text-gray-700 dark:text-gray-200 mb-3">
-                            Applicant Information
-                        </h3>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Contact Person</p>
-                                <p class="font-medium text-gray-800 dark:text-white">{{ $analysis->contact_person ?? '-' }}</p>
-                            </div>
-
-                            <div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Contact Number</p>
-                                <p class="font-medium text-gray-800 dark:text-white">{{ $analysis->contact_number ?? '-' }}</p>
-                            </div>
-
-                            <div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Trade License</p>
-                                <p class="font-medium text-gray-800 dark:text-white">{{ $analysis->trade_license ?? '-' }}</p>
-                            </div>
-
-                            <div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">BIN No</p>
-                                <p class="font-medium text-gray-800 dark:text-white">{{ $analysis->bin_no ?? '-' }}</p>
-                            </div>
-
-                            <div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">TIN No</p>
-                                <p class="font-medium text-gray-800 dark:text-white">{{ $analysis->tin_no ?? '-' }}</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    {{-- Project Information --}}
-                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-5 bg-gray-50 dark:bg-gray-800">
-                        <h3 class="text-md font-semibold text-gray-700 dark:text-gray-200 mb-3">
-                            Project Information
-                        </h3>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                            <div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Project Name</p>
-                                <p class="font-medium text-gray-800 dark:text-white">
-                                    {{ $analysis->project->name ?? 'N/A' }}
-                                </p>
-                            </div>
-
-                            <div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Tender Reference No</p>
-                                <p class="font-medium text-gray-800 dark:text-white">
-                                    {{ $analysis->tender_ref_no ?? '-' }}
-                                </p>
-                            </div>
-
-                            <div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Tender Amount</p>
-                                <p class="font-medium text-gray-800 dark:text-white">
-                                    {{ $analysis->tender_amount ? number_format($analysis->tender_amount, 2) . ' ৳' : '-' }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-
                     {{-- Taxpayer Info --}}
                     <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-5 bg-gray-50 dark:bg-gray-800">
                         <h3 class="text-md font-semibold text-gray-700 dark:text-gray-200 mb-3">
@@ -136,6 +72,24 @@
                                 <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">TIN No</p>
                                 <p class="text-base font-medium text-gray-800 dark:text-white">
                                     {{ $analysis->tin_no }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    {{-- Project Information --}}
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-5 bg-gray-50 dark:bg-gray-800">
+                        <h3 class="text-md font-semibold text-gray-700 dark:text-gray-200 mb-3">
+                            File Information
+                        </h3>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">File ID :</p>
+                                <p class="font-medium text-gray-800 dark:text-white">
+                                    {{ $analysis->project->name ?? 'N/A' }}
                                 </p>
                             </div>
                         </div>

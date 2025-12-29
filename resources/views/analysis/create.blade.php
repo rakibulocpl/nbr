@@ -35,13 +35,13 @@
                     {{-- 🔹 Applicant Information --}}
                     <div>
                         <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 border-b pb-2">
-                            Applicant Information
+                            Taxpayers Information
                         </h3>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                                    Business / Applicant Name <span class="text-red-500">*</span>
+                                    Business / Name of Taxpayers <span class="text-red-500">*</span>
                                 </label>
                                 <input type="text" name="taxpayer_name" placeholder="e.g. ABC Traders Ltd."
                                        class="required h-11 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 py-2 text-sm text-gray-800 dark:text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition"/>
@@ -55,79 +55,30 @@
                                        class="required h-11 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 py-2 text-sm text-gray-800 dark:text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition"/>
                             </div>
 
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                                    Trade License No
-                                </label>
-                                <input type="text" name="trade_license" placeholder="e.g. TL-2025/123"
-                                       class="h-11 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 py-2 text-sm text-gray-800 dark:text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition"/>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                                    BIN / VAT No
-                                </label>
-                                <input type="text" name="bin_no" placeholder="e.g. 87654321"
-                                       class="h-11 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 py-2 text-sm text-gray-800 dark:text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition"/>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                                    Contact Person
-                                </label>
-                                <input type="text" name="contact_person" placeholder="e.g. Mr. John Doe"
-                                       class="h-11 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 py-2 text-sm text-gray-800 dark:text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition"/>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                                    Contact Number
-                                </label>
-                                <input type="text" name="contact_number" placeholder="e.g. 017XXXXXXXX"
-                                       class="h-11 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 py-2 text-sm text-gray-800 dark:text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition"/>
-                            </div>
                         </div>
                     </div>
 
                     {{-- 🔹 Project Applied For --}}
                     <div>
                         <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 border-b pb-2">
-                            Project Applied For
+                            File Information
                         </h3>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="col-span-2">
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                                    Select Project <span class="text-red-500">*</span>
+                                    File ID :<span class="text-red-500">*</span>
                                 </label>
                                 <select name="project_id"
                                         class="required h-11 w-full rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-900 px-4 py-2 text-sm text-gray-800 dark:text-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition">
-                                    <option value="">-- Select Project --</option>
+                                    <option value="">-- Select File --</option>
                                     @foreach ($projects as $project)
                                         <option value="{{ $project->id }}">{{ $project->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                                    Tender Reference No
-                                </label>
-                                <input type="text" name="tender_ref_no" placeholder="e.g. NBR/TDR/2025/011"
-                                       class="h-11 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 py-2 text-sm text-gray-800 dark:text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition"/>
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">
-                                    Tender Amount
-                                </label>
-                                <input type="number" step="0.01" name="tender_amount" placeholder="e.g. 2500000.00"
-                                       class="h-11 w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-transparent px-4 py-2 text-sm text-gray-800 dark:text-white placeholder-gray-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 outline-none transition"/>
-                            </div>
                         </div>
                     </div>
-
-
                     {{-- 🔹 Bank Statements --}}
                     <div>
                         <h3 class="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4 border-b pb-2">

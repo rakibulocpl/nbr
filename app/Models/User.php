@@ -28,7 +28,6 @@ class User extends Authenticatable
         'nid_file',
         'desk_id',
         'department_id',
-        'address',
         'password',
     ];
 

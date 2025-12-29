@@ -43,6 +43,8 @@
                             'Account No' => $statementFile->acc_no ?? '-',
                             'Opening Balance' => number_format($statementFile->opening_balance, 2),
                             'Closing Balance' => number_format($statementFile->closing_balance, 2),
+                             'Total Debit' => number_format($totalDebit, 2),
+                            'Total Credit' => number_format($totalCredit, 2),
                         ];
                     @endphp
 
