@@ -29,35 +29,31 @@ class SendAnalysisRequest implements ShouldQueue
     public function handle(): void
     {
         try {
-            $tokenService = new NodeAuthService();
-            $token = $tokenService->getToken();
-
-            if (!$token) {
-                Log::error('Token could not be retrieved.');
-                return;
-            }
 
             // Example: Send another request to Node server using token
-            $url = config('app.api_base_url') . '/upload_statements';
+            $url = config('app.api_base_url') . '/place_request';
             $analysis = BankStatementAnalysis::with(['files.bank'])->find($this->analysisId);
 
 
             $multipart = [
-                ['name' => 'name', 'contents' => $analysis->taxpayer_name],
+                ['name' => 'taxpayer_name', 'contents' => $analysis->taxpayer_name],
                 ['name' => 'tin', 'contents' => $analysis->tin_no],
-                ['name' => 'user_id', 'contents' => config('app.api_user')],
-                ['name' => 'token', 'contents' => $token],
+                ['name' => 'officer_id', 'contents' => config('app.api_user')],
             ];
+
+            $statements = [];
 
             foreach ($analysis->files as $file) {
 
                 $filePath = storage_path(   'app/public/'.$file->file_path);
                 $fileName = basename($filePath);
-                $multipart[] = ['name'=>'files', 'contents'=>fopen($filePath, 'r'),'filename'=>$fileName];
-                $multipart[] = ['name'=>'banks', 'contents'=>$file->bank->short_name];
+                $bankName = $file->bank->short_name;
+                $statements[] = ['bank_name' => $bankName,'path' => $fileName];
             }
+            $multipart[] = ['name' => 'bank_statements', 'contents' => json_encode($statements)];
 
             $response = Http::asMultipart()->post($url, $multipart);
+
             $status = $response->status();
             $body   = $response->body();
 
@@ -76,21 +72,19 @@ class SendAnalysisRequest implements ShouldQueue
             Log::info($url);
             Log::info(json_encode($response));
 
-
-
             // ✅ Save request_id to each related bank file
             if (isset($data['request_id'])) {
                 $requestId = $data['request_id'];
                 $analysis->request_id = $requestId;
                 $analysis->status = 'processing';
                 $analysis->save();
-                StatusCheck::dispatch($analysis)->delay(now()->addSeconds(60));
                 Log::info("Request ID {$requestId} saved to bank_statement_files table.");
             } else {
                 Log::warning('No request_id found in Node response.');
             }
         }catch (\Exception $exception){
             $this->saveResponse($exception->getMessage(), false);
+
             Log::error($exception->getMessage());
         }
 

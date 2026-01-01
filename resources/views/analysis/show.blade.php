@@ -115,7 +115,6 @@
                                                 </h4>
                                                 <p class="text-sm text-gray-500">{{ $file->bank->short_name ?? '-' }}</p>
                                             </div>
-
                                             <a href="{{ asset('storage/'.$file->file_path) }}" target="_blank"
                                                class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium text-sm">
                                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none"
@@ -125,92 +124,100 @@
                                                 </svg>
                                                 View PDF
                                             </a>
-                                            <a href="{{ route('transactions.index', $file->id) }}"
-                                               class="text-blue-600 hover:underline text-sm font-medium">
-                                                View All Transactions →
-                                            </a>
 
-                                            <a href="{{ route('analysis.tags', $file->id) }}"
-                                               class="text-blue-600 hover:underline text-sm font-medium">
-                                                View All Tags →
-                                            </a>
+                                            @if(!empty($file->statement))
+
+                                                <a href="{{ route('transactions.index', $file->id) }}"
+                                                   class="text-blue-600 hover:underline text-sm font-medium">
+                                                    View All Transactions →
+                                                </a>
+
+                                                <a href="{{ route('analysis.tags', $file->id) }}"
+                                                   class="text-blue-600 hover:underline text-sm font-medium">
+                                                    View All Tags →
+                                                </a>
+                                            @endif
+
+
                                         </div>
 
                                         {{-- Account Info --}}
-                                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
-                                            <div>
-                                                <p class="text-sm text-gray-500 dark:text-gray-400">Account No</p>
-                                                <p class="font-medium text-gray-800 dark:text-white">{{ $file->acc_no ?? '-' }}</p>
+                                        @if(!empty($file->statement))
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-5">
+                                                <div>
+                                                    <p class="text-sm text-gray-500 dark:text-gray-400">Account No</p>
+                                                    <p class="font-medium text-gray-800 dark:text-white">{{ $file->statement->acc_no ?? '-' }}</p>
+                                                </div>
+                                                <div>
+                                                    <p class="text-sm text-gray-500 dark:text-gray-400">Account Type</p>
+                                                    <p class="font-medium text-gray-800 dark:text-white">{{ $file->statement->acc_type ?? '-' }}</p>
+                                                </div>
+                                                <div>
+                                                    <p class="text-sm text-gray-500 dark:text-gray-400">Opening Balance</p>
+                                                    <p class="font-medium text-gray-800 dark:text-white">
+                                                        {{ number_format($file->statement->opening_balance, 2) ?? '-' }}
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <p class="text-sm text-gray-500 dark:text-gray-400">Closing Balance</p>
+                                                    <p class="font-medium text-gray-800 dark:text-white">
+                                                        {{ number_format($file->statement->closing_balance, 2) ?? '-' }}
+                                                    </p>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <p class="text-sm text-gray-500 dark:text-gray-400">Account Type</p>
-                                                <p class="font-medium text-gray-800 dark:text-white">{{ $file->acc_type ?? '-' }}</p>
-                                            </div>
-                                            <div>
-                                                <p class="text-sm text-gray-500 dark:text-gray-400">Opening Balance</p>
-                                                <p class="font-medium text-gray-800 dark:text-white">
-                                                    {{ number_format($file->opening_balance, 2) ?? '-' }}
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <p class="text-sm text-gray-500 dark:text-gray-400">Closing Balance</p>
-                                                <p class="font-medium text-gray-800 dark:text-white">
-                                                    {{ number_format($file->closing_balance, 2) ?? '-' }}
-                                                </p>
-                                            </div>
-                                        </div>
 
-                                        {{-- Yearly Summary --}}
-                                        @if($file->yearlySummaries->count())
-                                            <div class="overflow-x-auto">
-                                                <table class="min-w-full text-sm text-left border border-gray-200 dark:border-gray-700 rounded-lg">
-                                                    <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
-                                                    <tr>
-                                                        <th class="px-4 py-2 border-b">Fiscal Year</th>
-                                                        <th class="px-4 py-2 border-b">Total Debit</th>
-                                                        <th class="px-4 py-2 border-b">Total Credit</th>
-                                                        <th class="px-4 py-2 border-b">Credit Interest</th>
-                                                        <th class="px-4 py-2 border-b">Source Tax</th>
-                                                        <th class="px-4 py-2 border-b">Year-end Balance</th>
-                                                        <th class="px-4 py-2 border-b">#</th>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody class="text-gray-700 dark:text-gray-300">
-                                                    @foreach ($file->yearlySummaries as $summary)
-                                                        <tr class="border-b border-gray-100 dark:border-gray-700">
-                                                            <td class="px-4 py-2">{{ $summary->fiscal_year }}</td>
-                                                            <td class="px-4 py-2">{{ number_format($summary->total_debit, 2) }}</td>
-                                                            <td class="px-4 py-2">{{ number_format($summary->total_credit, 2) }}</td>
-                                                            <td class="px-4 py-2">{{ number_format($summary->credit_interest, 2) }}</td>
-                                                            <td class="px-4 py-2">{{ number_format($summary->source_tax, 2) }}</td>
-                                                            <td class="px-4 py-2">{{ number_format($summary->yearend_balance, 2) }}</td>
-
-                                                            <td class="px-4 py-2 text-center">
-                                                                <div class="relative inline-block text-left">
-                                                                    <button type="button"
-                                                                            class="p-2 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none action-toggle">
-                                                                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
-                                                                            <path d="M6 11.25c0 .828.672 1.5 1.5 1.5S9 12.078 9 11.25 8.328 9.75 7.5 9.75 6 10.422 6 11.25zm6 0c0 .828.672 1.5 1.5 1.5s1.5-.672 1.5-1.5-.672-1.5-1.5-1.5-1.5.672-1.5 1.5zm6 0c0 .828.672 1.5 1.5 1.5S21 12.078 21 11.25 20.328 9.75 19.5 9.75 18 10.422 18 11.25z"/>
-                                                                        </svg>
-                                                                    </button>
-
-                                                                    <div class="action-menu absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg hidden z-50">
-                                                                        <ul class="text-sm text-gray-700">
-                                                                            <li><a href="{{ route('statement-analysis.year-details', [$analysis->id, $summary->id, 'cash']) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100">Cash</a></li>
-                                                                            <li><a href="{{ route('statement-analysis.year-details', [$analysis->id, $summary->id, 'cheque']) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100">Cheque</a></li>
-                                                                            <li><a href="{{ route('statement-analysis.year-details', [$analysis->id, $summary->id, 'transfer']) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100">Transfer</a></li>
-                                                                            <li><a href="{{ route('statement-analysis.year-details', [$analysis->id, $summary->id, 'other']) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100 rounded-b-lg">Other</a></li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </div>
-                                                            </td>
+                                            {{-- Yearly Summary --}}
+                                            @if($file->yearlySummaries->count())
+                                                <div class="overflow-x-auto">
+                                                    <table class="min-w-full text-sm text-left border border-gray-200 dark:border-gray-700 rounded-lg">
+                                                        <thead class="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200">
+                                                        <tr>
+                                                            <th class="px-4 py-2 border-b">Fiscal Year</th>
+                                                            <th class="px-4 py-2 border-b">Total Debit</th>
+                                                            <th class="px-4 py-2 border-b">Total Credit</th>
+                                                            <th class="px-4 py-2 border-b">Credit Interest</th>
+                                                            <th class="px-4 py-2 border-b">Source Tax</th>
+                                                            <th class="px-4 py-2 border-b">Year-end Balance</th>
+                                                            <th class="px-4 py-2 border-b">#</th>
                                                         </tr>
-                                                    @endforeach
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        @else
-                                            <p class="text-sm text-gray-500 dark:text-gray-400">No yearly summary data available.</p>
+                                                        </thead>
+                                                        <tbody class="text-gray-700 dark:text-gray-300">
+                                                        @foreach ($file->yearlySummaries as $summary)
+                                                            <tr class="border-b border-gray-100 dark:border-gray-700">
+                                                                <td class="px-4 py-2">{{ $summary->fiscal_year }}</td>
+                                                                <td class="px-4 py-2">{{ number_format($summary->total_debit, 2) }}</td>
+                                                                <td class="px-4 py-2">{{ number_format($summary->total_credit, 2) }}</td>
+                                                                <td class="px-4 py-2">{{ number_format($summary->credit_interest, 2) }}</td>
+                                                                <td class="px-4 py-2">{{ number_format($summary->source_tax, 2) }}</td>
+                                                                <td class="px-4 py-2">{{ number_format($summary->yearend_balance, 2) }}</td>
+
+                                                                <td class="px-4 py-2 text-center">
+                                                                    <div class="relative inline-block text-left">
+                                                                        <button type="button"
+                                                                                class="p-2 rounded-full text-gray-500 hover:text-gray-700 focus:outline-none action-toggle">
+                                                                            <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                                                                                <path d="M6 11.25c0 .828.672 1.5 1.5 1.5S9 12.078 9 11.25 8.328 9.75 7.5 9.75 6 10.422 6 11.25zm6 0c0 .828.672 1.5 1.5 1.5s1.5-.672 1.5-1.5-.672-1.5-1.5-1.5-1.5.672-1.5 1.5zm6 0c0 .828.672 1.5 1.5 1.5S21 12.078 21 11.25 20.328 9.75 19.5 9.75 18 10.422 18 11.25z"/>
+                                                                            </svg>
+                                                                        </button>
+
+{{--                                                                        <div class="action-menu absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg hidden z-50">--}}
+{{--                                                                            <ul class="text-sm text-gray-700">--}}
+{{--                                                                                <li><a href="{{ route('statement-analysis.year-details', [$analysis->id, $summary->id, 'cash']) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100">Cash</a></li>--}}
+{{--                                                                                <li><a href="{{ route('statement-analysis.year-details', [$analysis->id, $summary->id, 'cheque']) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100">Cheque</a></li>--}}
+{{--                                                                                <li><a href="{{ route('statement-analysis.year-details', [$analysis->id, $summary->id, 'transfer']) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100">Transfer</a></li>--}}
+{{--                                                                                <li><a href="{{ route('statement-analysis.year-details', [$analysis->id, $summary->id, 'other']) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100 rounded-b-lg">Other</a></li>--}}
+{{--                                                                            </ul>--}}
+{{--                                                                        </div>--}}
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            @else
+                                                <p class="text-sm text-gray-500 dark:text-gray-400">No yearly summary data available.</p>
+                                            @endif
                                         @endif
                                     </div>
                                 @endforeach

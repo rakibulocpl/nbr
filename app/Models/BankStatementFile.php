@@ -25,12 +25,16 @@ class BankStatementFile extends Model
     {
         return $this->belongsTo(Bank::class, 'bank_id');
     }
+    public function statement()
+    {
+        return $this->belongsTo(Statement::class, 'statement_id');
+    }
     public function analysis()
     {
         return $this->belongsTo(BankStatementAnalysis::class, 'bank_statement_analysis_id', 'id');
     }
     public function yearlySummaries()
     {
-        return $this->hasMany(StatementYearlySummary::class, 'file_id');
+        return $this->hasMany(Summary::class, 'statement_id');
     }
 }

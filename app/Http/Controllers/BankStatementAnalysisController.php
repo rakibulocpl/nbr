@@ -66,7 +66,6 @@ class BankStatementAnalysisController extends Controller
             }
         }
         SendAnalysisRequest::dispatch($statementAnalysis);
-
         return redirect()->route('analysis.index')->with('success', 'Request Submitted Successfully');
 
     }
