@@ -40,9 +40,9 @@
                             'Taxpayer' => $statementFile->analysis->taxpayer_name ?? '-',
                             'TIN No' => $statementFile->analysis->tin_no ?? '-',
                             'Bank' => $statementFile->bank->short_name ?? $statementFile->bank->name ?? '-',
-                            'Account No' => $statementFile->acc_no ?? '-',
-                            'Opening Balance' => number_format($statementFile->opening_balance, 2),
-                            'Closing Balance' => number_format($statementFile->closing_balance, 2),
+                            'Account No' => $statementFile->statement->acc_no ?? '-',
+                            'Opening Balance' => number_format($statementFile->statement->opening_balance, 2),
+                            'Closing Balance' => number_format($statementFile->statement->closing_balance, 2),
                              'Total Debit' => number_format($totalDebit, 2),
                             'Total Credit' => number_format($totalCredit, 2),
                         ];

@@ -7,7 +7,7 @@
                 <h2 class="text-lg font-semibold text-gray-800 dark:text-white">
                     {{ $summary->fiscal_year }} — {{ ucfirst($action ?? 'Details') }}
                 </h2>
-                <a href="{{ route('analysis.show', $summary->file->analysis->id) }}"
+                <a href="{{ route('analysis.show', $fileDetails->analysis->id) }}"
                    class="inline-flex items-center gap-1 px-3 py-1.5 text-sm font-medium text-white bg-gray-600 rounded-md hover:bg-gray-700 transition">
                     <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
@@ -21,30 +21,30 @@
                 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
                     <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
                         <p class="text-gray-500 text-xs">Taxpayer</p>
-                        <p class="font-medium text-gray-800 dark:text-white">{{ $summary->file->analysis->taxpayer_name ?? '-' }}</p>
+                        <p class="font-medium text-gray-800 dark:text-white">{{ $fileDetails->analysis->taxpayer_name ?? '-' }}</p>
                     </div>
                     <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
                         <p class="text-gray-500 text-xs">TIN No</p>
-                        <p class="font-medium text-gray-800 dark:text-white">{{ $summary->file->analysis->tin_no ?? '-' }}</p>
+                        <p class="font-medium text-gray-800 dark:text-white">{{ $fileDetails->analysis->tin_no ?? '-' }}</p>
                     </div>
                     <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
                         <p class="text-gray-500 text-xs">Bank</p>
                         <p class="font-medium text-gray-800 dark:text-white">
-                            {{ $summary->file->bank->short_name ?? $summary->file->bank->name ?? '-' }}
+                            {{ $fileDetails->bank->short_name ?? $fileDetails->bank->name ?? '-' }}
                         </p>
                     </div>
                     <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
                         <p class="text-gray-500 text-xs">Account No</p>
-                        <p class="font-medium text-gray-800 dark:text-white">{{ $summary->file->acc_no ?? '-' }}</p>
+                        <p class="font-medium text-gray-800 dark:text-white">{{ $summary->acc_no ?? '-' }}</p>
                     </div>
-                    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
-                        <p class="text-gray-500 text-xs">Opening</p>
-                        <p class="font-medium text-gray-800 dark:text-white">{{ number_format($summary->file->opening_balance, 2) }}</p>
-                    </div>
-                    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
-                        <p class="text-gray-500 text-xs">Closing</p>
-                        <p class="font-medium text-gray-800 dark:text-white">{{ number_format($summary->file->closing_balance, 2) }}</p>
-                    </div>
+{{--                    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">--}}
+{{--                        <p class="text-gray-500 text-xs">Opening</p>--}}
+{{--                        <p class="font-medium text-gray-800 dark:text-white">{{ number_format($summary->file->opening_balance, 2) }}</p>--}}
+{{--                    </div>--}}
+{{--                    <div class="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">--}}
+{{--                        <p class="text-gray-500 text-xs">Closing</p>--}}
+{{--                        <p class="font-medium text-gray-800 dark:text-white">{{ number_format($summary->file->closing_balance, 2) }}</p>--}}
+{{--                    </div>--}}
                 </div>
 
                 {{-- Summary Numbers (inline badges) --}}
@@ -98,6 +98,9 @@
                         @endforelse
                         </tbody>
                     </table>
+                    <div class="px-4 py-3 bg-gray-50 dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
+                        {{ $summaryDetails->links() }}
+                    </div>
                 </div>
             </div>
         </div>

@@ -35,6 +35,6 @@ class BankStatementFile extends Model
     }
     public function yearlySummaries()
     {
-        return $this->hasMany(Summary::class, 'statement_id');
+        return $this->hasMany(Summary::class, 'statement_id','statement_id');
     }
 }

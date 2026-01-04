@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TransactionType;
 use App\Jobs\SendAnalysisRequest;
 use App\Models\Bank;
 use App\Models\BankStatementAnalysis;
 use App\Models\BankStatementFile;
+use App\Models\Statement;
 use App\Models\StatementTag;
 use App\Models\StatementYearlySummary;
+use App\Models\Summary;
 use App\Models\Transaction;
 use App\Services\NodeAuthService;
 use Illuminate\Http\Request;
@@ -56,8 +59,7 @@ class BankStatementAnalysisController extends Controller
         foreach ($request->banks as $index => $bankId) {
             if ($request->hasFile('files.' . $index)) {
                 $file = $request->file('files.' . $index);
-                $path = $file->store('bank_statements', 'public'); // saves to storage/app/public/bank_statements
-
+                $path = $file->store('', 'idf_content'); // saves to storage/app/public/bank_statements
                 BankStatementFile::create([
                     'bank_statement_analysis_id' => $statementAnalysis->id,
                     'bank_id' => $bankId,
@@ -72,6 +74,38 @@ class BankStatementAnalysisController extends Controller
 
     public function show($id){
         $analysis = BankStatementAnalysis::with(['files.bank', 'files.yearlySummaries'])->findOrFail($id);
+        if($analysis->status == 'processing'){
+            $analysisRequest = \App\Models\Request::where('id',$analysis->request_id)->first();
+            $statements = Statement::where('request_id', $analysisRequest->id)
+                ->orderBy('id') // important for consistent serial
+                ->get();
+
+            $files = BankStatementFile::where('bank_statement_analysis_id', $analysis->id)
+                ->orderBy('id')
+                ->get();
+
+            foreach ($files as $index => $file) {
+                if (isset($statements[$index])) {
+                    $file->statement_id = $statements[$index]->id;
+                    $file->save();
+                    if (!empty($statements[$index]->tags)) {
+                        \App\Models\StatementTag::where('file_id', $file->id)->delete();
+                        $decodedTags = json_decode($statements[$index]->tags);
+                        foreach ($decodedTags as $tag => $count) {
+                            \App\Models\StatementTag::create([
+                                'file_id' => $file->id,
+                                'tag'     => $tag,
+                                'count'   => $count,
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            $analysis->status = 'done';
+            $analysis->save();
+            $analysis->refresh();
+        }
 
         return view('analysis.show', compact('analysis'));
     }
@@ -94,12 +128,23 @@ class BankStatementAnalysisController extends Controller
     }
 
     public function yearDetails($analysisId, $yearDetailId,$type){
-        $summary = StatementYearlySummary::with(['file.bank', 'file.analysis'])->findOrFail($yearDetailId);
-        $authService = new NodeAuthService();
-        $summaryDetails = $authService->getSummaryDetails($summary,$type);
+
+        $summary = Summary::findOrFail($yearDetailId);
+        $statementId = $summary->statement_id;
+
+        $fileDetails = BankStatementFile::with(['bank', 'analysis'])->where('statement_id',$statementId)->first();
+
+        $fiscalYear = $summary->fiscal_year;
 
 
-        return view('analysis.year-details', compact('summary','summaryDetails'));
+        $transectionType = TransactionType::fromSlug($type);
+
+        $summaryDetails = Transaction::where('fiscal_year', $fiscalYear)
+            ->where('statement_id', $statementId)
+            ->where('Cat_L3',$transectionType)->paginate(12);
+
+
+        return view('analysis.year-details', compact('summary','summaryDetails','fileDetails'));
 
     }
 
@@ -161,18 +206,25 @@ class BankStatementAnalysisController extends Controller
 
 
         if ($tag){
-            $authService = new NodeAuthService();
-//            $transections = Transaction::search($tag)
-//                ->query(fn($q) => $q->where('file_id', $fileId)->orderBy('date', 'desc'))
-//                ->paginate(10);
-            $statementFile = BankStatementFile::with('analysis')->find($fileId);
-            $searchData = $authService->getSearchDAta($statementFile,$tag);
-            $totalDebit  = collect($searchData)->sum('debit');
-            $totalCredit = collect($searchData)->sum('credit');
+            $searchResult = Transaction::search($tag)
+                ->where('statement_id', $fileId)
+                ->get();
+            $transections = Transaction::whereIn('id', $searchResult->pluck('id'))
+                ->orderBy('date', 'desc')
+                ->paginate(10)->withQueryString();
+            $totals = Transaction::whereIn('id', $searchResult->pluck('id'))
+                ->selectRaw('
+                COALESCE(SUM(debit), 0) as total_debit,
+                COALESCE(SUM(credit), 0) as total_credit
+            ')
+                ->first();
+
+            $totalDebit  = $totals->total_debit;
+            $totalCredit = $totals->total_credit;
 
         }else{
-            $transections = Transaction::where('file_id', '=', $fileId)->orderBy('date', 'desc')->paginate(10);
-            $totals = Transaction::where('file_id', $fileId)
+            $transections = Transaction::where('statement_id', '=', $fileId)->orderBy('date', 'desc')->paginate(10);
+            $totals = Transaction::where('statement_id', $fileId)
                 ->selectRaw('
                     SUM(debit) as total_debit,
                     SUM(credit) as total_credit
@@ -183,7 +235,7 @@ class BankStatementAnalysisController extends Controller
             $totalCredit = $totals->total_credit;
         }
 
-        $statementFile = BankStatementFile::with('analysis')->findOrFail($fileId);
+        $statementFile = BankStatementFile::with('analysis')->where('statement_id',$fileId)->first();
         return view('analysis.transactions', compact('transections','statementFile','searchData','totalDebit','totalCredit'));
     }
 

@@ -127,7 +127,7 @@
 
                                             @if(!empty($file->statement))
 
-                                                <a href="{{ route('transactions.index', $file->id) }}"
+                                                <a href="{{ route('transactions.index', $file->statement_id) }}"
                                                    class="text-blue-600 hover:underline text-sm font-medium">
                                                     View All Transactions →
                                                 </a>
@@ -200,14 +200,14 @@
                                                                             </svg>
                                                                         </button>
 
-{{--                                                                        <div class="action-menu absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg hidden z-50">--}}
-{{--                                                                            <ul class="text-sm text-gray-700">--}}
-{{--                                                                                <li><a href="{{ route('statement-analysis.year-details', [$analysis->id, $summary->id, 'cash']) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100">Cash</a></li>--}}
-{{--                                                                                <li><a href="{{ route('statement-analysis.year-details', [$analysis->id, $summary->id, 'cheque']) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100">Cheque</a></li>--}}
-{{--                                                                                <li><a href="{{ route('statement-analysis.year-details', [$analysis->id, $summary->id, 'transfer']) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100">Transfer</a></li>--}}
-{{--                                                                                <li><a href="{{ route('statement-analysis.year-details', [$analysis->id, $summary->id, 'other']) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100 rounded-b-lg">Other</a></li>--}}
-{{--                                                                            </ul>--}}
-{{--                                                                        </div>--}}
+                                                                    <div class="action-menu absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg hidden z-50">
+                                                                        <ul class="text-sm text-gray-700">
+                                                                            <li><a href="{{ route('statement-analysis.year-details', [$analysis->id, $summary->id, 'cash']) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100">Cash</a></li>
+                                                                            <li><a href="{{ route('statement-analysis.year-details', [$analysis->id, $summary->id, 'cheque']) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100">Cheque</a></li>
+                                                                            <li><a href="{{ route('statement-analysis.year-details', [$analysis->id, $summary->id, 'transfer']) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100">Transfer</a></li>
+                                                                            <li><a href="{{ route('statement-analysis.year-details', [$analysis->id, $summary->id, 'other']) }}" target="_blank" class="block px-4 py-2 hover:bg-gray-100 rounded-b-lg">Other</a></li>
+                                                                        </ul>
+                                                                    </div>
                                                                     </div>
                                                                 </td>
                                                             </tr>

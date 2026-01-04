@@ -36,9 +36,9 @@
                             'Taxpayer' => $statementFile->analysis->taxpayer_name ?? '-',
                             'TIN No' => $statementFile->analysis->tin_no ?? '-',
                             'Bank' => $statementFile->bank->short_name ?? $statementFile->bank->name ?? '-',
-                            'Account No' => $statementFile->acc_no ?? '-',
-                            'Opening Balance' => number_format($statementFile->opening_balance, 2),
-                            'Closing Balance' => number_format($statementFile->closing_balance, 2),
+                            'Account No' => $statementFile->statement->acc_no ?? '-',
+                            'Opening Balance' => number_format($statementFile->statement->opening_balance, 2),
+                            'Closing Balance' => number_format($statementFile->statement->closing_balance, 2),
                         ];
                     @endphp
 
@@ -63,12 +63,12 @@
                 <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
 
                     @foreach ($tags as $tag)
-                        <a href="{{ route('transactions.index', ['fileId' => $statementFile->id, 'tag' => $tag->tag]) }}">
+                        <a href="{{ route('transactions.index', ['fileId' => $statementFile->statement_id, 'tag' => $tag->tag]) }}">
                             <div class="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-4 rounded-lg">
                                 <span class="text-gray-700 dark:text-gray-200 font-medium">
                                     {{ $tag->tag }}
                                 </span>
-                                                    <span class="px-3 py-1 text-xs font-semibold bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 rounded-full">
+                                <span class="px-3 py-1 text-xs font-semibold bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 rounded-full">
                                     {{ $tag->count }}
                                 </span>
                             </div>
